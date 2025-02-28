@@ -27,11 +27,16 @@ public class CannonLife : MonoBehaviour
                 liveUI[i].enabled = i < lives;
             }
 
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.CannonHit(); // Báo cho GameManager biết Cannon bị mất mạng
+            }
+
             if (lives <= 0)
             {
                 Debug.Log("Cannon bị phá hủy!");
                 anim.SetTrigger("Explode"); // Kích hoạt animation Explode
-                Invoke("DestroyCannon", 0.6f); // Chờ s rồi hủy Cannon
+                Invoke("DestroyCannon", 0.6f); // Chờ 0.6s rồi hủy Cannon
             }
         }
     }

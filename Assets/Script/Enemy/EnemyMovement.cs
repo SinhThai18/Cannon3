@@ -4,7 +4,7 @@ using System;
 public class EnemyMovement : MonoBehaviour
 {
     public float moveSpeed = 2f;
-    private Vector2 moveDirection = Vector2.right;
+    public Vector2 moveDirection = Vector2.right;
 
 
     void Update()

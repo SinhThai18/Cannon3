@@ -3,20 +3,22 @@
 public class EnemySpawner : MonoBehaviour
 {
     public EnemyPool enemyPool;
-    public Transform spawnPoint;
     public float spawnInterval = 2f;
 
     void Start()
     {
-        InvokeRepeating("SpawnEnemy", 0f, spawnInterval);
+        InvokeRepeating("SpawnEnemies", 0f, spawnInterval);
     }
 
-    void SpawnEnemy()
+    void SpawnEnemies()
     {
-        GameObject enemy = enemyPool.GetEnemy();
-        if (enemy != null) // Chỉ spawn nếu còn enemy trong pool
+        foreach (var enemyType in enemyPool.enemyTypes)
         {
-            enemy.transform.position = spawnPoint.position;
+            GameObject enemy = enemyPool.GetEnemy(enemyType.prefab);
+            if (enemy != null)
+            {
+                enemy.transform.position = enemyType.spawnPoint.position;
+            }
         }
     }
 }

@@ -1,37 +1,60 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class EnemyType
+{
+    public GameObject prefab;
+    public int poolSize;
+    public Transform spawnPoint; // Vị trí spawn riêng cho từng loại
+}
+
 public class EnemyPool : MonoBehaviour
 {
-    public GameObject enemyPrefab;
-    public int poolSize = 10;
+    public List<EnemyType> enemyTypes; // Danh sách các loại enemy
 
-    private List<GameObject> enemyPool = new List<GameObject>();
+    private Dictionary<GameObject, List<GameObject>> enemyPools = new Dictionary<GameObject, List<GameObject>>();
 
     void Start()
     {
-        // Tạo sẵn enemy và đưa vào pool
-        for (int i = 0; i < poolSize; i++)
+        // Khởi tạo pool cho từng loại enemy
+        foreach (var enemyType in enemyTypes)
         {
-            GameObject enemy = Instantiate(enemyPrefab);
-            enemy.SetActive(false);
-            enemyPool.Add(enemy);
+            List<GameObject> pool = new List<GameObject>();
+
+            for (int i = 0; i < enemyType.poolSize; i++)
+            {
+                GameObject enemy = Instantiate(enemyType.prefab);
+                enemy.SetActive(false);
+                pool.Add(enemy);
+            }
+
+            enemyPools[enemyType.prefab] = pool;
         }
     }
 
-    // Hàm lấy enemy từ pool
-    public GameObject GetEnemy()
+    // Lấy enemy từ pool theo loại enemy
+    public GameObject GetEnemy(GameObject enemyPrefab)
     {
-        foreach (GameObject enemy in enemyPool)
+        if (enemyPools.ContainsKey(enemyPrefab))
         {
-            if (!enemy.activeInHierarchy)
+            foreach (GameObject enemy in enemyPools[enemyPrefab])
             {
-                enemy.SetActive(true);
-                return enemy;
+                if (!enemy.activeInHierarchy)
+                {
+                    enemy.SetActive(true);
+                    return enemy;
+                }
             }
         }
 
-        // Nếu không còn enemy trống trong pool, return null
+        // Nếu pool hết enemy, return null
         return null;
+    }
+
+    // Hàm trả enemy về pool (khi enemy chết)
+    public void ReturnEnemy(GameObject enemy)
+    {
+        enemy.SetActive(false);
     }
 }

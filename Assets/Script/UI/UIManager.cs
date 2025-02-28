@@ -7,7 +7,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
     public Text killCounterText; // Text hiển thị số kill
 
-    private int killCount = 0; // Số enemy bị tiêu diệt
+    private int killCount1 = 0; // Số enemy bị tiêu diệt
 
     void Awake()
     {
@@ -19,17 +19,19 @@ public class UIManager : MonoBehaviour
 
     void OnEnable()
     {
-        EnemyManager.OnEnemyKilled += UpdateKillCount; // Đăng ký lắng nghe event
+        EnemyManager.OnEnemyKilled += UpdateKillCount; // Lắng nghe sự kiện Enemy bị giết
     }
 
     void OnDisable()
     {
-        EnemyManager.OnEnemyKilled -= UpdateKillCount; // Hủy đăng ký event
+        EnemyManager.OnEnemyKilled -= UpdateKillCount; // Hủy lắng nghe sự kiện
     }
 
     void UpdateKillCount()
     {
-        killCount++;
-        killCounterText.text = killCount.ToString(); // Cập nhật UI
+        killCount1++;
+        killCounterText.text = killCount1.ToString(); // Cập nhật UI
+
+        GameManager.Instance.EnemyKilled(); // Báo cho GameManager biết enemy bị tiêu diệt
     }
 }
